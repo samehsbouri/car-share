@@ -1,0 +1,38 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_row(form.dateDepart) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_row(form.places) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_row(form.villeDepart) }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form_row(form.villeArrivee) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form_row(form.prix) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer bg-transparent">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i> {{ button_label|default('Enregistrer') }}
+        </button>
+        <a href="{{ path('app_admin_trajet_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+{{ form_end(form) }}

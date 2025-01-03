@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white !important;
+        }
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        .hover-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+        .profile-image-wrapper {
+            padding: 0.5rem;
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            border-radius: 50%;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto;
+        }
+        .profile-image-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+        }
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .stats-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .stats-number {
+            font-size: 2.5rem;
+        }
+        @media (max-width: 768px) {
+            .stats-number {
+                font-size: 2rem;
+            }
+        }
+        .footer {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}">CarShare</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_trajet_index') }}">Trips</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_vehicule_index') }}">Véhicules</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Réservation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_avis_index') }}">Avis</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid py-5 bg-light">
+    <div class="container">
+        <!-- Alert Messages -->
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }} alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="row g-4">
+            <!-- Profile Card -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm hover-card">
+                    <div class="card-header bg-gradient text-white"
+                         style="background: linear-gradient(45deg, #4e54c8, #8f94fb)">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-user me-2"></i>Mon Profil
+                        </h5>
+                    </div>
+                    <div class="card-body text-center p-4">
+                        <div class="profile-image-wrapper mb-4">
+                            <div class="profile-image-container">
+                                {% if user.photo is defined and user.photo %}
+                                    <img src="/uploads/users/{{ user.photo }}"
+                                         alt="Photo de profil"
+                                         class="profile-image">
+                                {% else %}
+                                    <img src="/images/default-avatar.png"
+                                         alt="Photo par défaut"
+                                         class="profile-image">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <h4 class="fw-bold mb-1">{{ user.prenom }} {{ user.nom }}</h4>
+                        <p class="text-muted mb-4">
+                            <i class="fas fa-envelope me-2"></i>{{ user.email }}
+                        </p>
+                        <a href="{{ path('app_profile_edit') }}"
+                           class="btn btn-primary btn-lg rounded-pill w-100">
+                            <i class="fas fa-edit me-2"></i>Modifier mon profil
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <!-- Statistics Card -->
+                <div class="card border-0 shadow-sm hover-card mb-4">
+                    <div class="card-header bg-gradient text-white"
+                         style="background: linear-gradient(45deg, #2193b0, #6dd5ed)">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-bar me-2"></i>Mes Statistiques
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="stats-card text-center p-4 rounded-3 bg-light">
+                                    <div class="stats-icon mb-3">
+                                        <i class="fas fa-car fa-3x text-primary"></i>
+                                    </div>
+                                    <h2 class="stats-number fw-bold text-primary mb-2">
+                                        {{ stats.trajetsProposesCount }}
+                                    </h2>
+                                    <p class="text-muted mb-0">Trajets proposés</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stats-card text-center p-4 rounded-3 bg-light">
+                                    <div class="stats-icon mb-3">
+                                        <i class="fas fa-ticket-alt fa-3x text-success"></i>
+                                    </div>
+                                    <h2 class="stats-number fw-bold text-success mb-2">
+                                        {{ stats.reservationsCount }}
+                                    </h2>
+                                    <p class="text-muted mb-0">Réservations</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stats-card text-center p-4 rounded-3 bg-light">
+                                    <div class="stats-icon mb-3">
+                                        <i class="fas fa-calendar-alt fa-3x text-info"></i>
+                                    </div>
+                                    <h2 class="stats-number fw-bold text-info mb-2">
+                                        {{ stats.trajetsFutursCount }}
+                                    </h2>
+                                    <p class="text-muted mb-0">Trajets à venir</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Card -->
+                <div class="card border-0 shadow-sm hover-card">
+                    <div class="card-header bg-gradient text-white"
+                         style="background: linear-gradient(45deg, #11998e, #38ef7d)">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-bolt me-2"></i>Actions Rapides
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <a href="{{ path('app_mes_trajets', {'id': app.user.id}) }}"
+                                   class="btn btn-outline-primary btn-lg rounded-pill w-100">
+                                    <i class="fas fa-list-ul me-2"></i>Mes trajets
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ path('app_trajet_new') }}"
+                                   class="btn btn-outline-success btn-lg rounded-pill w-100">
+                                    <i class="fas fa-plus me-2"></i>Proposer un trajet
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 CarShare. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate statistics
+        const stats = document.querySelectorAll('.stats-number');
+        stats.forEach(stat => {
+            const finalValue = parseInt(stat.textContent);
+            let currentValue = 0;
+            const duration = 1500;
+            const increment = finalValue / (duration / 16);
+
+            const counter = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= finalValue) {
+                    stat.textContent = finalValue;
+                    clearInterval(counter);
+                } else {
+                    stat.textContent = Math.floor(currentValue);
+                }
+            }, 16);
+        });
+
+        // Auto-dismiss alerts
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                if (alert.classList.contains('alert-dismissible')) {
+                    alert.remove();
+                }
+            });
+        }, 5000);
+    });
+</script>
+</body>
+</html>

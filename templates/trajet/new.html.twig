@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouveau Trajet</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white !important;
+        }
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        .gradient-primary {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+        }
+        .hover-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+        .form-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        .form-floating > .form-control,
+        .form-floating > .form-select {
+            height: calc(3.5rem + 2px);
+            line-height: 1.25;
+        }
+        .form-floating > label {
+            padding: 1rem 1.25rem;
+        }
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #4e54c8;
+            box-shadow: 0 0 0 0.25rem rgba(78, 84, 200, 0.25);
+        }
+        .btn {
+            padding: 12px 30px;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .footer {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}">CarShare</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_trajet_index') }}">Trips</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_vehicule_index') }}">Véhicules</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Réservation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_avis_index') }}">Avis</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid py-5 bg-light flex-grow-1">
+    <div class="container">
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="display-4 fw-bold text-primary mb-2">
+                            <i class="fas fa-plus-circle me-3"></i>Nouveau Trajet
+                        </h1>
+                        <p class="text-muted lead">Proposez un nouveau trajet aux voyageurs</p>
+                    </div>
+                    <a href="{{ path('app_mes_trajets', {'id': app.user.id}) }}"
+                       class="btn btn-outline-primary btn-lg rounded-pill">
+                        <i class="fas fa-arrow-left me-2"></i>Mes trajets
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts Section -->
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- Form Card -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 shadow-sm hover-card">
+                    <div class="card-header gradient-primary text-white p-4">
+                        <h4 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Informations du trajet
+                        </h4>
+                    </div>
+
+                    <div class="card-body p-4">
+                        {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+
+                        <!-- Véhicule Section -->
+                        <div class="form-section mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-car me-2"></i>Véhicule
+                            </h5>
+                            <div class="input-group-custom">
+                                {{ form_widget(form.vehicule, {
+                                    'attr': {
+                                        'class': 'form-select form-control-lg rounded-pill'
+                                    }
+                                }) }}
+                                {{ form_errors(form.vehicule) }}
+                            </div>
+                        </div>
+
+                        <!-- Masquer le champ conducteur -->
+                        <div class="d-none">
+                            {{ form_widget(form.conducteur) }}
+                        </div>
+
+                        <!-- Trajet Section -->
+                        <div class="form-section mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-map-marker-alt me-2"></i>Itinéraire
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.villeDepart, {
+                                            'attr': {
+                                                'class': 'form-control rounded-pill',
+                                                'placeholder': 'Ville de départ'
+                                            }
+                                        }) }}
+                                        {{ form_label(form.villeDepart, 'Ville de départ') }}
+                                        {{ form_errors(form.villeDepart) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.villeArrivee, {
+                                            'attr': {
+                                                'class': 'form-control rounded-pill',
+                                                'placeholder': 'Ville d\'arrivée'
+                                            }
+                                        }) }}
+                                        {{ form_label(form.villeArrivee, 'Ville d\'arrivée') }}
+                                        {{ form_errors(form.villeArrivee) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Details Section -->
+                        <div class="form-section">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-info-circle me-2"></i>Détails
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.dateDepart, {
+                                            'attr': {
+                                                'class': 'form-control rounded-pill',
+                                                'placeholder': 'Date et heure'
+                                            }
+                                        }) }}
+                                        {{ form_label(form.dateDepart, 'Date et heure') }}
+                                        {{ form_errors(form.dateDepart) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.places, {
+                                            'attr': {
+                                                'class': 'form-control rounded-pill',
+                                                'placeholder': 'Places',
+                                                'min': 1
+                                            }
+                                        }) }}
+                                        {{ form_label(form.places, 'Places') }}
+                                        {{ form_errors(form.places) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.prix, {
+                                            'attr': {
+                                                'class': 'form-control rounded-pill',
+                                                'placeholder': 'Prix',
+                                                'min': 0,
+                                                'step': '0.1'
+                                            }
+                                        }) }}
+                                        {{ form_label(form.prix, 'Prix (TND)') }}
+                                        {{ form_errors(form.prix) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill">
+                                <i class="fas fa-save me-2"></i>Créer le trajet
+                            </button>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 CarShare. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-close alerts
+        setTimeout(function() {
+            const alerts = document.getElementsByClassName('alert');
+            Array.from(alerts).forEach(alert => {
+                const closeButton = alert.querySelector('.btn-close');
+                if(closeButton) closeButton.click();
+            });
+        }, 5000);
+    });
+</script>
+</body>
+</html>

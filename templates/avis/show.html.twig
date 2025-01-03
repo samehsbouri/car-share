@@ -1,0 +1,6 @@
+{# Dans trajet/show.html.twig #}
+{% if app.user and trajet.dateDepart < date() %}
+    <a href="{{ path('app_avis_new', {'id': trajet.id}) }}" class="btn btn-primary">
+        Laisser un avis
+    </a>
+{% endif %}

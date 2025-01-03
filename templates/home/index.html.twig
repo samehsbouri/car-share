@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - CarShare{% endblock %}
+
+{% block body %}
+    <div class="jumbotron">
+        <h1 class="display-4">Bienvenue sur CarShare</h1>
+        <p class="lead">Trouvez ou proposez un trajet en covoiturage dès maintenant !</p>
+        <hr class="my-4">
+        <p>Rejoignez notre communauté de covoiturage et voyagez de manière économique et écologique.</p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{{ path('app_trajet_index') }}" role="button">Voir les trajets</a>
+            {% if not app.user %}
+                <a class="btn btn-success btn-lg" href="{{ path('app_register') }}" role="button">S'inscrire</a>
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <h3>Économique</h3>
+            <p>Partagez les frais de voyage avec d'autres voyageurs.</p>
+        </div>
+        <div class="col-md-4">
+            <h3>Écologique</h3>
+            <p>Réduisez votre empreinte carbone en partageant votre trajet.</p>
+        </div>
+        <div class="col-md-4">
+            <h3>Social</h3>
+            <p>Rencontrez de nouvelles personnes pendant vos voyages.</p>
+        </div>
+    </div>
+{% endblock %}

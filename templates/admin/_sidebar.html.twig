@@ -1,0 +1,92 @@
+<nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+    <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_dashboard' ? 'active' }}"
+                   href="{{ path('app_admin_dashboard') }}">
+                    <i class="fas fa-home me-2"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_users' ? 'active' }}"
+                   href="{{ path('app_admin_users') }}">
+                    <i class="fas fa-users me-2"></i>
+                    Gestion Utilisateurs
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_trajets' ? 'active' }}"
+                   href="{{ path('app_admin_trajets') }}">
+                    <i class="fas fa-route me-2"></i>
+                    Gestion Trajets
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_vehicules' ? 'active' }}"
+                   href="{{ path('app_admin_vehicules') }}">
+                    <i class="fas fa-car me-2"></i>
+                    Gestion Véhicules
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_reservations' ? 'active' }}"
+                   href="{{ path('app_admin_reservations') }}">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Gestion Réservations
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<style>
+    .sidebar {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        min-height: 100vh;
+    }
+
+    .sidebar .nav-link {
+        color: #333;
+        padding: 0.8rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: #e9ecef;
+        color: #0d6efd;
+    }
+
+    .sidebar .nav-link.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    .sidebar .nav-link.active i {
+        color: white;
+    }
+
+    .sidebar .nav-link i {
+        width: 20px;
+        color: #6c757d;
+    }
+
+    .nav-item {
+        margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+        }
+    }
+</style>

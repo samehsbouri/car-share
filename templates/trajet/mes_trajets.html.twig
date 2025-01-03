@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Trajets</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white !important;
+        }
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        .gradient-primary {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+        }
+        .gradient-warning {
+            background: linear-gradient(45deg, #f2994a, #f2c94c);
+        }
+        .gradient-danger {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        }
+        .hover-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s ease forwards;
+        }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .page-header {
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4e54c8;
+            margin-bottom: 0.5rem;
+        }
+        .detail-item {
+            padding: 1rem;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .detail-item:hover {
+            transform: translateX(5px);
+            background-color: #e9ecef;
+        }
+        .detail-item i {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(78, 84, 200, 0.1);
+            border-radius: 50%;
+            margin-right: 1rem;
+            color: #4e54c8;
+        }
+        .reservations-section {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+        .reservation-item {
+            padding: 0.75rem;
+            border-radius: 8px;
+            background: white;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        .reservation-item:hover {
+            transform: translateX(5px);
+            background-color: #f8f9fa;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+        }
+        .btn-warning {
+            background: linear-gradient(45deg, #f2994a, #f2c94c);
+            color: white;
+        }
+        .btn-danger {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: white;
+        }
+        .btn-group {
+            border-radius: 30px;
+            overflow: hidden;
+        }
+        .btn-group .btn {
+            border-radius: 0;
+        }
+        .badge {
+            padding: 0.75rem 1.25rem;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 15px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards 0.3s;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            color: #4e54c8;
+            margin-bottom: 1.5rem;
+        }
+        .alert {
+            border: none;
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            .detail-item {
+                padding: 0.75rem;
+            }
+            .badge {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+        .footer {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        {% for i in 0..10 %}
+        .hover-card:nth-child({{ i }}) {
+            animation-delay: {{ i * 0.1 }}s;
+        }
+        {% endfor %}
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}">CarShare</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_trajet_index') }}">Trips</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_vehicule_index') }}">Véhicules</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Réservation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_avis_index') }}">Avis</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid py-5 bg-light flex-grow-1">
+    <div class="container">
+        <!-- Header Section -->
+        <div class="page-header">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="page-title">
+                                <i class="fas fa-route me-3"></i>Mes Trajets
+                            </h1>
+                            <p class="text-muted lead">Gérez vos trajets proposés</p>
+                        </div>
+                        <a href="{{ path('app_trajet_new') }}"
+                           class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>Nouveau trajet
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts Section -->
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle me-2"></i>
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- Trajets Grid -->
+        <div class="row g-4">
+            {% if trajets is empty %}
+                <div class="col-12">
+                    <div class="empty-state">
+                        <i class="fas fa-route"></i>
+                        <h4>Aucun trajet proposé</h4>
+                        <p class="text-muted mb-4">Commencez par proposer votre premier trajet !</p>
+                        <a href="{{ path('app_trajet_new') }}"
+                           class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>Proposer un trajet
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                {% for trajet in trajets %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="hover-card h-100">
+                            <!-- Card Header -->
+                            <div class="card-header gradient-primary text-white p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-map-marker-alt me-2"></i>
+                                        {{ trajet.villeDepart }} → {{ trajet.villeArrivee }}
+                                    </h5>
+                                    <span class="badge bg-white text-primary">
+                                            {{ trajet.prix }} TND
+                                        </span>
+                                </div>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body p-3">
+                                <div class="trajet-details">
+                                    <div class="detail-item">
+                                        <i class="far fa-calendar-alt"></i>
+                                        {{ trajet.dateDepart|date('d/m/Y') }}
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="far fa-clock"></i>
+                                        {{ trajet.dateDepart|date('H:i') }}
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-users"></i>
+                                        {{ trajet.places - trajet.reservations|length }} places disponibles
+                                    </div>
+                                </div>
+
+                                {% if trajet.reservations|length > 0 %}
+                                    <div class="reservations-section">
+                                        <h6 class="fw-bold mb-3">
+                                            <i class="fas fa-user-friends text-primary me-2"></i>
+                                            Réservations ({{ trajet.reservations|length }})
+                                        </h6>
+                                        <div class="reservation-list">
+                                            {% for reservation in trajet.reservations %}
+                                                <div class="reservation-item">
+                                                    <i class="fas fa-user text-primary me-2"></i>
+                                                    {{ reservation.passager.email }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Card Footer -->
+                            <div class="card-footer bg-white border-0 p-3">
+                                <div class="d-flex gap-2">
+                                    <a href="{{ path('app_trajet_show', {'id': trajet.id}) }}"
+                                       class="btn btn-outline-primary flex-grow-1">
+                                        <i class="fas fa-eye me-2"></i>Détails
+                                    </a>
+                                    <div class="btn-group">
+                                        <a href="{{ path('app_trajet_edit', {'id': trajet.id}) }}"
+                                           class="btn btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% if trajet.reservations is empty %}
+                                            {{ include('trajet/_delete_form.html.twig') }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 CarShare. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation des cartes au scroll
+        const cards = document.querySelectorAll('.hover-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        cards.forEach(card => observer.observe(card));
+
+        // Animation des alertes
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.classList.add('fade');
+                setTimeout(() => alert.remove(), 300);
+            }, 5000);
+        });
+    });
+</script>
+</body>
+</html>

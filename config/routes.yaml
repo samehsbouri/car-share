@@ -1,0 +1,18 @@
+controllers:
+    resource: ../src/Controller/
+    type: annotation
+avis_new:
+    path: /avis/trajet/{id}/nouveau
+    controller: App\Controller\AvisController::new
+app_api_change_password:
+    path: /profile/api/change-password
+    controller: App\Controller\ProfileController::apiChangePassword
+    methods: [POST]
+app_admin_trajet_delete:
+    path: /admin/trajet/{id}/delete
+    controller: App\Controller\AdminController::deleteTrajet
+    methods: [POST]
+app_admin_user_delete:
+    path: /admin/user/{id}/delete
+    controller: App\Controller\AdminController::deleteUser
+    methods: POST

@@ -1,0 +1,195 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Trajets{% endblock %}
+
+{% block body %}
+    <div class="container-fluid py-5 bg-light">
+        <div class="container">
+            <!-- Header Section -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="display-4 fw-bold text-primary mb-2">Mes Trajets</h1>
+                            <p class="text-muted lead">Gérez vos trajets proposés</p>
+                        </div>
+                        <a href="{{ path('app_trajet_new') }}" class="btn btn-primary btn-lg rounded-pill">
+                            <i class="fas fa-plus-circle me-2"></i> Nouveau trajet
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts Section -->
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }} alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <!-- Trajets Grid -->
+            <div class="row g-4">
+                {% if trajets is empty %}
+                    <div class="col-12">
+                        <div class="alert alert-info rounded-3 shadow-sm text-center p-5">
+                            <i class="fas fa-route fa-3x mb-3"></i>
+                            <h4>Aucun trajet proposé</h4>
+                            <p class="mb-0">Commencez par proposer votre premier trajet !</p>
+                        </div>
+                    </div>
+                {% else %}
+                    {% for trajet in trajets %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 border-0 shadow-sm hover-card">
+                                <!-- Trajet Header -->
+                                <div class="card-image-wrapper position-relative">
+                                    <img src="/images/road-banner.jpg"
+                                         class="card-img-top vehicle-image"
+                                         alt="Route">
+                                    <div class="vehicle-overlay"></div>
+                                    <div class="position-absolute top-0 end-0 p-3">
+                                    <span class="badge bg-primary rounded-pill px-3 py-2">
+                                        {{ trajet.prix }} TND
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold mb-3">
+                                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                        {{ trajet.villeDepart }} → {{ trajet.villeArrivee }}
+                                    </h5>
+
+                                    <div class="trajet-details">
+                                        <div class="detail-item mb-2 d-flex align-items-center">
+                                            <i class="far fa-calendar-alt text-primary me-3"></i>
+                                            <span>{{ trajet.dateDepart|date('d/m/Y') }}</span>
+                                        </div>
+                                        <div class="detail-item mb-2 d-flex align-items-center">
+                                            <i class="far fa-clock text-primary me-3"></i>
+                                            <span>{{ trajet.dateDepart|date('H:i') }}</span>
+                                        </div>
+                                        <div class="detail-item mb-2 d-flex align-items-center">
+                                            <i class="fas fa-users text-primary me-3"></i>
+                                            <span>{{ trajet.places - trajet.reservations|length }} places disponibles</span>
+                                        </div>
+                                    </div>
+
+                                    {% if trajet.reservations|length > 0 %}
+                                        <div class="reservations-section mt-3">
+                                            <h6 class="text-muted mb-2">
+                                                <i class="fas fa-user-friends me-2"></i>
+                                                Réservations ({{ trajet.reservations|length }})
+                                            </h6>
+                                            <div class="reservation-list">
+                                                {% for reservation in trajet.reservations %}
+                                                    <small class="d-block text-muted">
+                                                        <i class="fas fa-user me-2"></i>
+                                                        {{ reservation.passager.email }}
+                                                    </small>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Card Footer -->
+                                <div class="card-footer bg-white border-0 pt-0">
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ path('app_trajet_show', {'id': trajet.id}) }}"
+                                           class="btn btn-outline-primary rounded-pill flex-grow-1">
+                                            <i class="fas fa-eye me-2"></i>Détails
+                                        </a>
+
+                                        <div class="btn-group flex-grow-1" role="group">
+                                            <a href="{{ path('app_trajet_edit', {'id': trajet.id}) }}"
+                                               class="btn btn-warning rounded-pill">
+                                                <i class="fas fa-edit me-2"></i>Modifier
+                                            </a>
+                                            {% if trajet.reservations is empty %}
+                                                <form method="post" action="{{ path('app_trajet_delete', {'id': trajet.id}) }}"
+                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trajet ?');"
+                                                      class="d-inline">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trajet.id) }}">
+                                                    <button type="submit" class="btn btn-danger rounded-pill">
+                                                        <i class="fas fa-trash me-2"></i>Supprimer
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .hover-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+        .vehicle-image {
+            height: 200px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .vehicle-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+        }
+
+        .detail-item {
+            padding: 8px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .badge {
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .display-4 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+{% endblock %}

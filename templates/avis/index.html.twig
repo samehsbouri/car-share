@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Avis et Réservations</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white !important;
+        }
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        .gradient-primary {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+        }
+        .gradient-secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+        }
+        .review-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+        }
+        .rating {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+        .custom-tab {
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .custom-tab.active {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            color: white;
+        }
+        .btn-review {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .btn-review:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: white;
+        }
+        .footer {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}">CarShare</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_trajet_index') }}">Trips</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_vehicule_index') }}">Véhicules</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Réservation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_avis_index') }}">Avis</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenu principal -->
+<div class="container-fluid py-5 bg-light flex-grow-1">
+    <div class="container">
+        <!-- Header Section -->
+        <div class="card border-0 shadow-sm hover-card mb-4">
+            <div class="card-header gradient-primary text-white p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-2">Mes Avis et Réservations</h1>
+                        <p class="mb-0 opacity-75">Gérez vos avis et découvrez vos réservations terminées</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts Section -->
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                <i class="fas fa-check-circle me-2"></i>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+        <!-- Tabs -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="custom-tab active" data-tab="mes-avis">
+                    <i class="fas fa-star me-2"></i>Mes Avis ({{ avis|length }})
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="custom-tab" data-tab="a-evaluer">
+                    <i class="fas fa-clock me-2"></i>À Évaluer ({{ reservationsTerminees|length }})
+                </div>
+            </div>
+        </div>
+
+        <!-- Mes Avis -->
+        <div class="tab-content" id="mes-avis">
+            {% if avis is empty %}
+                <div class="text-center py-5">
+                    <i class="fas fa-comment-alt fa-3x text-muted mb-3"></i>
+                    <h4>Aucun avis donné</h4>
+                    <p class="text-muted">Vous n'avez pas encore donné d'avis sur vos trajets.</p>
+                </div>
+            {% else %}
+                <div class="row">
+                    {% for avis in avis %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="review-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="rating">
+                                            {% for i in 1..5 %}
+                                                <i class="fas fa-star {{ i <= avis.note ? '' : 'text-muted' }}"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <small class="text-muted">{{ avis.dateAvis|date('d/m/Y') }}</small>
+                                    </div>
+                                    <h5 class="mb-3">
+                                        {{ avis.trajet.villeDepart }} → {{ avis.trajet.villeArrivee }}
+                                    </h5>
+                                    <p class="text-muted mb-3">{{ avis.commentaire }}</p>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-user-circle me-2"></i>
+                                        <span>{{ avis.trajet.conducteur.prenom }} {{ avis.trajet.conducteur.nom }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- À Évaluer -->
+        <div class="tab-content d-none" id="a-evaluer">
+            {% if reservationsTerminees is empty %}
+                <div class="text-center py-5">
+                    <i class="fas fa-check-circle fa-3x text-muted mb-3"></i>
+                    <h4>Tout est à jour !</h4>
+                    <p class="text-muted">Vous avez évalué tous vos trajets terminés.</p>
+                </div>
+            {% else %}
+                <div class="row">
+                    {% for reservation in reservationsTerminees %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="review-card">
+                                <div class="card-body">
+                                    <h5 class="mb-3">
+                                        {{ reservation.trajet.villeDepart }} → {{ reservation.trajet.villeArrivee }}
+                                    </h5>
+                                    <div class="mb-3">
+                                        <i class="fas fa-calendar-alt me-2"></i>
+                                        {{ reservation.trajet.dateDepart|date('d/m/Y H:i') }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <i class="fas fa-user me-2"></i>
+                                        {{ reservation.trajet.conducteur.prenom }} {{ reservation.trajet.conducteur.nom }}
+                                    </div>
+                                    <a href="{{ path('app_avis_new', {'id': reservation.trajet.id}) }}"
+                                       class="btn btn-review w-100">
+                                        <i class="fas fa-star me-2"></i>Laisser un avis
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 CarShare. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab switching
+        const tabs = document.querySelectorAll('.custom-tab');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+
+                // Hide all contents
+                contents.forEach(c => c.classList.add('d-none'));
+                // Show selected content
+                document.getElementById(tab.dataset.tab).classList.remove('d-none');
+            });
+        });
+
+        // Animation des cartes
+        const cards = document.querySelectorAll('.review-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.4s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100 * index);
+        });
+
+        // Auto-hide alerts
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.classList.add('fade');
+                setTimeout(() => alert.remove(), 300);
+            }, 5000);
+        });
+    });
+</script>
+</body>
+</html>

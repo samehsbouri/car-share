@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de l'Avis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white !important;
+        }
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        .admin-container {
+            padding: 20px;
+        }
+        .detail-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .detail-card-header {
+            padding: 20px;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        .detail-section {
+            padding: 20px;
+        }
+        .info-table {
+            width: 100%;
+        }
+        .info-table th {
+            width: 40%;
+            padding: 12px;
+            color: #6c757d;
+            font-weight: 500;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        .info-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f2f2f2;
+        }
+        .badge-custom {
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-weight: 500;
+        }
+        .action-buttons {
+            gap: 10px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .action-buttons .btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .admin-nav {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .admin-nav .nav-link {
+            color: #6c757d;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-nav .nav-link:hover,
+        .admin-nav .nav-link.active {
+            background-color: #f8f9fa;
+            color: #0d6efd;
+        }
+        .admin-nav .nav-pills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .star-rating {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+        .footer {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}">CarShare</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_trajet_index') }}">Trips</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_vehicule_index') }}">Véhicules</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Réservation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_avis_index') }}">Avis</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="admin-container">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Détails de l'Avis</h1>
+        <a href="{{ path('app_admin_avis') }}" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left me-2"></i>Retour à la liste
+        </a>
+    </div>
+
+    <!-- Navigation -->
+    <div class="admin-nav mb-4">
+        <div class="nav nav-pills">
+            <a class="nav-link" href="{{ path('app_admin_dashboard') }}">
+                <i class="fas fa-home"></i>Dashboard
+            </a>
+            <a class="nav-link" href="{{ path('app_admin_users') }}">
+                <i class="fas fa-users"></i>Utilisateurs
+            </a>
+            <a class="nav-link" href="{{ path('app_admin_trajets') }}">
+                <i class="fas fa-route"></i>Trajets
+            </a>
+            <a class="nav-link" href="{{ path('app_admin_reservations') }}">
+                <i class="fas fa-calendar"></i>Réservations
+            </a>
+            <a class="nav-link" href="{{ path('app_admin_vehicules') }}">
+                <i class="fas fa-car"></i>Véhicules
+            </a>
+            <a class="nav-link active" href="{{ path('app_admin_avis') }}">
+                <i class="fas fa-star"></i>Avis
+            </a>
+        </div>
+    </div>
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                <i class="fa-solid fa-circle-info me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="row">
+        <!-- Informations de l'avis -->
+        <div class="col-md-6 mb-4">
+            <div class="detail-card">
+                <div class="detail-card-header">
+                    <h5 class="mb-0">
+                        <i class="fa-solid fa-star me-2"></i>
+                        Informations de l'avis
+                    </h5>
+                </div>
+                <div class="detail-section">
+                    <table class="info-table">
+                        <tr>
+                            <th>Date</th>
+                            <td>
+                                <i class="fa-regular fa-calendar me-2"></i>
+                                {{ avis.dateAvis|date('d/m/Y H:i') }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Note</th>
+                            <td>
+                                <div class="star-rating">
+                                    {% for i in 1..5 %}
+                                        <i class="fas fa-star {% if i <= avis.note %}text-warning{% else %}text-muted{% endif %}"></i>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Commentaire</th>
+                            <td>{{ avis.commentaire }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informations de l'utilisateur -->
+        <div class="col-md-6 mb-4">
+            <div class="detail-card">
+                <div class="detail-card-header">
+                    <h5 class="mb-0">
+                        <i class="fa-solid fa-user me-2"></i>
+                        Informations de l'utilisateur
+                    </h5>
+                </div>
+                <div class="detail-section">
+                    <table class="info-table">
+                        <tr>
+                            <th>Nom complet</th>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-secondary text-white me-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    {{ avis.auteur.prenom }} {{ avis.auteur.nom }}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>
+                                <i class="fa-solid fa-envelope me-2"></i>
+                                {{ avis.auteur.email }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="detail-card">
+        <div class="detail-section">
+            <div class="action-buttons">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="fa-solid fa-trash"></i>
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cet avis ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" action="{{ path('app_admin_avis_delete', {'id': avis.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avis.id) }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa-solid fa-trash me-2"></i>
+                        Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 CarShare. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-hide des alertes
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.classList.remove('show');
+                setTimeout(() => alert.remove(), 150);
+            }, 5000);
+        });
+    });
+</script>
+</body>
+</html>

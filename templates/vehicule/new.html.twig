@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un véhicule</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white !important;
+        }
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        .gradient-primary {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+        }
+        .gradient-danger {
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        }
+        .hover-card {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+        }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+        .form-floating > .form-control {
+            height: calc(3.5rem + 2px);
+            line-height: 1.25;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 1rem 1.25rem;
+        }
+        .form-floating > label {
+            padding: 1rem 1.25rem;
+            color: #6c757d;
+        }
+        .form-control:focus {
+            border-color: #4e54c8;
+            box-shadow: 0 0 0 0.25rem rgba(78, 84, 200, 0.1);
+        }
+        .upload-zone {
+            border: 2px dashed #4e54c8;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: rgba(78, 84, 200, 0.05);
+            cursor: pointer;
+        }
+        .upload-zone:hover {
+            background: rgba(78, 84, 200, 0.1);
+            border-color: #8f94fb;
+        }
+        .current-image img {
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .current-image img:hover {
+            transform: scale(1.02);
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            border: none;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .alert {
+            border: none;
+            border-radius: 15px;
+        }
+        .invalid-feedback {
+            margin-top: 0.5rem;
+            margin-left: 1rem;
+            font-size: 0.875rem;
+            color: #dc3545;
+        }
+        .card-header {
+            border-bottom: none;
+            padding: 1.5rem;
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 1.5rem;
+            }
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            .display-4 {
+                font-size: 2rem;
+            }
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .card {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .form-group {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+        .footer {
+            background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}">CarShare</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_trajet_index') }}">Trips</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_vehicule_index') }}">Véhicules</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Réservation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_avis_index') }}">Avis</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid py-5 bg-light flex-grow-1">
+    <div class="container">
+        <!-- Header Card -->
+        <div class="card border-0 shadow-sm hover-card mb-4">
+            <div class="card-header gradient-primary text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-2">Ajouter un véhicule</h1>
+                        <p class="mb-0 opacity-75">
+                            Ajoutez un nouveau véhicule à votre flotte
+                        </p>
+                    </div>
+                    <a href="{{ path('app_vehicule_index') }}"
+                       class="btn btn-light rounded-pill">
+                        <i class="fas fa-arrow-left me-2"></i>Retour
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Messages -->
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }} alert-dismissible fade show mb-4 shadow-sm" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle me-2"></i>
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- Form Card -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm hover-card">
+                    <div class="card-header gradient-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-car me-2"></i>Informations du véhicule
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+                        <div class="row g-4">
+                            <!-- Image Upload -->
+                            <div class="col-12 form-group">
+                                <div class="upload-zone">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                                    {{ form_widget(form.imageFile, {
+                                        'attr': {
+                                            'class': 'form-control'
+                                        }
+                                    }) }}
+                                    <small class="text-muted d-block mt-2">
+                                        Format accepté : JPG, PNG, GIF. Taille max : 2MB
+                                    </small>
+                                </div>
+                                {{ form_errors(form.imageFile) }}
+                                <div id="imagePreview" class="current-image mt-3 text-center"></div>
+                            </div>
+
+                            <!-- Marque et Modèle -->
+                            <div class="col-md-6 form-group">
+                                <div class="form-floating">
+                                    {{ form_widget(form.marque, {
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Marque'
+                                        }
+                                    }) }}
+                                    {{ form_label(form.marque, 'Marque') }}
+                                </div>
+                                {{ form_errors(form.marque) }}
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <div class="form-floating">
+                                    {{ form_widget(form.modele, {
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Modèle'
+                                        }
+                                    }) }}
+                                    {{ form_label(form.modele, 'Modèle') }}
+                                </div>
+                                {{ form_errors(form.modele) }}
+                            </div>
+
+                            <!-- Année et Couleur -->
+                            <div class="col-md-6 form-group">
+                                <div class="form-floating">
+                                    {{ form_widget(form.annee, {
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Année'
+                                        }
+                                    }) }}
+                                    {{ form_label(form.annee, 'Année') }}
+                                </div>
+                                {{ form_errors(form.annee) }}
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <div class="form-floating">
+                                    {{ form_widget(form.couleur, {
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Couleur'
+                                        }
+                                    }) }}
+                                    {{ form_label(form.couleur, 'Couleur') }}
+                                </div>
+                                {{ form_errors(form.couleur) }}
+                            </div>
+
+                            <!-- Immatriculation et Places -->
+                            <div class="col-md-6 form-group">
+                                <div class="form-floating">
+                                    {{ form_widget(form.immatriculation, {
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Immatriculation'
+                                        }
+                                    }) }}
+                                    {{ form_label(form.immatriculation, 'Immatriculation') }}
+                                </div>
+                                {{ form_errors(form.immatriculation) }}
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <div class="form-floating">
+                                    {{ form_widget(form.nombrePlaces, {
+                                        'attr': {
+                                            'class': 'form-control',
+                                            'placeholder': 'Nombre de places'
+                                        }
+                                    }) }}
+                                    {{ form_label(form.nombrePlaces, 'Nombre de places') }}
+                                </div>
+                                {{ form_errors(form.nombrePlaces) }}
+                            </div>
+
+                            <!-- Propriétaire (caché) -->
+                            <div style="display: none;">
+                                {{ form_widget(form.proprietaire, {
+                                    'data': app.user
+                                }) }}
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-plus-circle me-2"></i>Ajouter le véhicule
+                                </button>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 CarShare. Tous droits réservés.</p>
+    </div>
+</footer>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Image preview
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.createElement('img');
+                        preview.src = e.target.result;
+                        preview.className = 'img-fluid rounded-3 shadow-sm';
+                        preview.style.maxHeight = '200px';
+
+                        const imagePreview = document.getElementById('imagePreview');
+                        imagePreview.innerHTML = '';
+                        imagePreview.appendChild(preview);
+                        imagePreview.innerHTML += '<p class="text-muted mt-2">Image sélectionnée</p>';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Form validation
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    });
+</script>
+</body>
+</html>
