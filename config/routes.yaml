@@ -16,3 +16,12 @@ app_admin_user_delete:
     path: /admin/user/{id}/delete
     controller: App\Controller\AdminController::deleteUser
     methods: POST
+app_profile_edit:
+    path: /profile/edit
+    controller: App\Controller\ProfileController::edit
+    methods: [GET, POST]
+
+app_profile_change_password:
+    path: /profile/change-password
+    controller: App\Controller\ProfileController::changePassword
+    methods: [GET, POST]

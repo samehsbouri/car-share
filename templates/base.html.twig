@@ -7,120 +7,225 @@
     <title>{% block title %}CarShare{% endblock %}</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
 
-    {# Bootstrap CSS CDN #}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    {# FontAwesome #}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    {# Custom Styles #}
     {% block stylesheets %}
         <style>
+            :root {
+                --primary-gradient: linear-gradient(45deg, #4e54c8, #8f94fb);
+                --hover-gradient: linear-gradient(45deg, #8f94fb, #4e54c8);
+                --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                --transition: all 0.3s ease;
+            }
+
             body {
                 font-family: 'Poppins', sans-serif;
                 background-color: #f8f9fa;
                 color: #333;
+                line-height: 1.6;
             }
+
             .navbar {
-                background: linear-gradient(45deg, #4e54c8, #8f94fb);
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                background: var(--primary-gradient);
+                box-shadow: var(--shadow);
+                padding: 1rem 0;
             }
+
             .navbar-brand {
                 font-size: 1.5rem;
                 font-weight: 600;
                 color: white !important;
+                letter-spacing: 0.5px;
             }
+
             .navbar-nav .nav-link {
-                color: rgba(255, 255, 255, 0.8) !important;
+                color: rgba(255, 255, 255, 0.9) !important;
                 font-weight: 500;
-                transition: all 0.3s ease;
+                padding: 0.5rem 1rem;
+                margin: 0 0.2rem;
+                border-radius: 8px;
+                transition: var(--transition);
             }
+
             .navbar-nav .nav-link:hover {
                 color: white !important;
+                background: rgba(255, 255, 255, 0.1);
                 transform: translateY(-2px);
             }
+
             .btn-custom {
-                background: linear-gradient(45deg, #4e54c8, #8f94fb);
+                background: var(--primary-gradient);
                 border: none;
                 color: white;
-                padding: 10px 20px;
-                border-radius: 25px;
+                padding: 12px 24px;
+                border-radius: 12px;
                 font-weight: 500;
-                transition: all 0.3s ease;
+                transition: var(--transition);
+                box-shadow: 0 4px 15px rgba(78, 84, 200, 0.2);
             }
+
             .btn-custom:hover {
-                background: linear-gradient(45deg, #8f94fb, #4e54c8);
+                background: var(--hover-gradient);
                 transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(78, 84, 200, 0.3);
             }
+
             .card {
                 border: none;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-                transition: all 0.3s ease;
+                border-radius: 16px;
+                box-shadow: var(--shadow);
+                transition: var(--transition);
+                overflow: hidden;
             }
+
             .card:hover {
                 transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             }
+
+            .card-body {
+                padding: 2rem;
+            }
+
+            section {
+                padding: 5rem 0;
+            }
+
             .section-title {
                 font-size: 2.5rem;
                 font-weight: 700;
-                margin-bottom: 2rem;
+                margin-bottom: 1.5rem;
                 text-align: center;
+                color: #2d3436;
             }
+
             .section-subtitle {
-                font-size: 1.25rem;
+                font-size: 1.1rem;
                 color: #6c757d;
                 text-align: center;
                 margin-bottom: 3rem;
+                max-width: 700px;
+                margin-left: auto;
+                margin-right: auto;
             }
+
+            .fa-3x {
+                background: var(--primary-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                transition: var(--transition);
+            }
+
+            .form-control {
+                padding: 0.8rem 1.2rem;
+                border-radius: 12px;
+                border: 2px solid #e9ecef;
+                transition: var(--transition);
+            }
+
+            .form-control:focus {
+                border-color: #4e54c8;
+                box-shadow: 0 0 0 0.25rem rgba(78, 84, 200, 0.1);
+            }
+
+            .alert {
+                border-radius: 12px;
+                border: none;
+                box-shadow: var(--shadow);
+            }
+
             .footer {
-                background: linear-gradient(45deg, #4e54c8, #8f94fb);
+                background: var(--primary-gradient);
                 color: white;
                 padding: 2rem 0;
                 text-align: center;
+            }
+
+            @media (max-width: 768px) {
+                .section-title {
+                    font-size: 2rem;
+                }
+                .navbar-brand {
+                    font-size: 1.3rem;
+                }
+                section {
+                    padding: 3rem 0;
+                }
+            }
+
+            .fade-in {
+                animation: fadeIn 0.5s ease-in;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
             }
         </style>
     {% endblock %}
 </head>
 <body>
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
-        <a class="navbar-brand" href="{{ path('app_home') }}">CarShare</a>
+        <a class="navbar-brand" href="{{ path('app_home') }}">
+            <i class="fas fa-car-side me-2"></i>CarShare
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                    <a class="nav-link" href="{{ path('app_home') }}">
+                        <i class="fas fa-home me-1"></i>Accueil
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_trajet_index') }}">Trips</a>
+                    <a class="nav-link" href="{{ path('app_trajet_index') }}">
+                        <i class="fas fa-route me-1"></i>Trajets
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_vehicule_index') }}">Véhicules</a>
+                    <a class="nav-link" href="{{ path('app_vehicule_index') }}">
+                        <i class="fas fa-car me-1"></i>Véhicules
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Réservation</a>
+                    <a class="nav-link" href="{{ path('app_reservation_index') }}">
+                        <i class="fas fa-bookmark me-1"></i>Réservations
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_avis_index') }}">Avis</a>
+                    <a class="nav-link" href="{{ path('app_avis_index') }}">
+                        <i class="fas fa-star me-1"></i>Avis
+                    </a>
                 </li>
             </ul>
             <ul class="navbar-nav">
                 {% if app.user %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a>
+                        <a class="nav-link" href="{{ path('app_profile') }}">
+                            <i class="fas fa-user me-1"></i>Mon Profil
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                        <a class="nav-link" href="{{ path('app_logout') }}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                        </a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                        <a class="nav-link" href="{{ path('app_login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Connexion
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                        <a class="nav-link" href="{{ path('app_register') }}">
+                            <i class="fas fa-user-plus me-1"></i>Inscription
+                        </a>
                     </li>
                 {% endif %}
             </ul>
@@ -128,20 +233,19 @@
     </div>
 </nav>
 
-<!-- Contenu principal -->
+<!-- Flash Messages -->
 <div class="container mt-4">
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">
-            {{ message }}
-        </div>
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }} fade-in">
+                {{ message }}
+            </div>
+        {% endfor %}
     {% endfor %}
+</div>
 
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger">
-            {{ message }}
-        </div>
-    {% endfor %}
-
+<!-- Main Content -->
+<div class="container mt-4">
     {% block body %}{% endblock %}
 </div>
 
@@ -149,86 +253,64 @@
 <section id="how" class="py-5 bg-light">
     <div class="container">
         <h2 class="section-title">Comment ça marche</h2>
-        <p class="section-subtitle">Découvrez comment utiliser CarShare en quelques étapes simples.</p>
+        <p class="section-subtitle">Découvrez comment utiliser CarShare en quelques étapes simples</p>
         <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="card h-100 text-center p-4">
-                    <i class="fas fa-search fa-3x mb-3 text-primary"></i>
-                    <h3>Recherchez</h3>
-                    <p>Trouvez un trajet qui correspond à vos besoins.</p>
+                    <i class="fas fa-search fa-3x mb-3"></i>
+                    <h3 class="h4 mb-3">Recherchez</h3>
+                    <p class="text-muted mb-0">Trouvez un trajet qui correspond à vos besoins.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card h-100 text-center p-4">
-                    <i class="fas fa-users fa-3x mb-3 text-primary"></i>
-                    <h3>Réservez</h3>
-                    <p>Choisissez votre conducteur et réservez votre place.</p>
+                    <i class="fas fa-users fa-3x mb-3"></i>
+                    <h3 class="h4 mb-3">Réservez</h3>
+                    <p class="text-muted mb-0">Choisissez votre conducteur et réservez votre place.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card h-100 text-center p-4">
-                    <i class="fas fa-car fa-3x mb-3 text-primary"></i>
-                    <h3>Voyagez</h3>
-                    <p>Profitez d'un trajet confortable et économique.</p>
+                    <i class="fas fa-car fa-3x mb-3"></i>
+                    <h3 class="h4 mb-3">Voyagez</h3>
+                    <p class="text-muted mb-0">Profitez d'un trajet confortable et économique.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 <!-- À propos -->
 <section id="about" class="py-5">
     <div class="container">
         <h2 class="section-title">À propos de CarShare</h2>
-        <p class="section-subtitle">Découvrez qui nous sommes et ce que nous faisons.</p>
-        <div class="row">
-            <div class="col-md-6">
-                <p>CarShare est une plateforme de covoiturage moderne qui connecte les conducteurs et les passagers. Notre mission est de rendre les voyages plus accessibles, écologiques et conviviaux.</p>
-            </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-6 mb-4">
-                        <div class="card h-100 text-center p-4">
-                            <i class="fas fa-users fa-3x mb-3 text-primary"></i>
-                            <h3>50K+</h3>
-                            <p>Utilisateurs actifs</p>
-                        </div>
-                    </div>
-                    <div class="col-6 mb-4">
-                        <div class="card h-100 text-center p-4">
-                            <i class="fas fa-car fa-3x mb-3 text-primary"></i>
-                            <h3>100K+</h3>
-                            <p>Trajets réalisés</p>
+        <p class="section-subtitle">Une nouvelle façon de voyager ensemble</p>
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="lead mb-4">CarShare est une plateforme de covoiturage moderne qui connecte les conducteurs et les passagers. Notre mission est de rendre les voyages plus accessibles, écologiques et conviviaux.</p>
+                        <div class="d-grid gap-2">
+                            <a href="#contact" class="btn btn-custom">En savoir plus</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Pourquoi nous choisir -->
-<section id="why" class="py-5 bg-light">
-    <div class="container">
-        <h2 class="section-title">Pourquoi nous choisir</h2>
-        <p class="section-subtitle">Découvrez les avantages de CarShare.</p>
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 p-4">
-                    <h3>Économique</h3>
-                    <p>Partagez les frais de transport et économisez sur vos déplacements.</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 p-4">
-                    <h3>Écologique</h3>
-                    <p>Réduisez votre empreinte carbone en partageant vos trajets.</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 p-4">
-                    <h3>Social</h3>
-                    <p>Rencontrez de nouvelles personnes et voyagez en bonne compagnie.</p>
+            <div class="col-md-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card text-center p-4">
+                            <i class="fas fa-users fa-3x mb-3"></i>
+                            <h3 class="h2 mb-0">50K+</h3>
+                            <p class="text-muted mb-0">Utilisateurs actifs</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card text-center p-4">
+                            <i class="fas fa-car fa-3x mb-3"></i>
+                            <h3 class="h2 mb-0">100K+</h3>
+                            <p class="text-muted mb-0">Trajets réalisés</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -236,41 +318,70 @@
 </section>
 
 <!-- Contact -->
-<section id="contact" class="py-5">
+<section id="contact" class="py-5 bg-light">
     <div class="container">
         <h2 class="section-title">Contactez-nous</h2>
-        <p class="section-subtitle">Une question ? Notre équipe est là pour vous aider.</p>
+        <p class="section-subtitle">Notre équipe est là pour vous aider</p>
         <div class="row">
-            <div class="col-md-6 mb-4">
-                <ul class="list-unstyled">
-                    <li class="mb-3">
-                        <i class="fas fa-envelope fa-fw"></i> contact@carshare.fr
-                    </li>
-                    <li class="mb-3">
-                        <i class="fas fa-phone fa-fw"></i> 01 23 45 67 89
-                    </li>
-                    <li class="mb-3">
-                        <i class="fas fa-comment fa-fw"></i> Chat en direct
-                    </li>
-                </ul>
+            <div class="col-md-5 mb-4 mb-md-0">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h4 mb-4">Informations de contact</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <i class="fas fa-envelope fa-fw me-2 text-primary"></i>
+                                contact@carshare.fr
+                            </li>
+                            <li class="mb-3">
+                                <i class="fas fa-phone fa-fw me-2 text-primary"></i>
+                                92 255 201
+                            </li>
+                            <li class="mb-3">
+                                <i class="fas fa-map-marker-alt fa-fw me-2 text-primary"></i>
+                                TEk-UP
+                            </li>
+                        </ul>
+                        <div class="mt-4">
+                            <a href="#" class="btn btn-outline-primary me-2">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline-primary me-2">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="card">
                     <div class="card-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Nom</label>
-                                <input type="text" class="form-control" id="name" required>
+                        <form class="needs-validation" novalidate>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Nom</label>
+                                    <input type="text" class="form-control" id="name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="subject" class="form-label">Sujet</label>
+                                    <input type="text" class="form-control" id="subject" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="message" class="form-label">Message</label>
+                                    <textarea class="form-control" id="message" rows="4" required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-custom w-100">
+                                        <i class="fas fa-paper-plane me-2"></i>Envoyer le message
+                                    </button>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="message" class="form-label">Message</label>
-                                <textarea class="form-control" id="message" rows="4" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-custom w-100">Envoyer</button>
                         </form>
                     </div>
                 </div>
@@ -280,15 +391,54 @@
 </section>
 
 <!-- Footer -->
-<footer class="footer">
+<footer class="footer mt-auto">
     <div class="container">
-        <p>&copy; 2024 CarShare. Tous droits réservés.</p>
+        <div class="row">
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <h5 class="text-white mb-3">CarShare</h5>
+                <p class="mb-0">Une solution de covoiturage moderne et écologique.</p>
+            </div>
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <h5 class="text-white mb-3">Liens rapides</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white-50">Conditions d'utilisation</a></li>
+                    <li><a href="#" class="text-white-50">Politique de confidentialité</a></li>
+                    <li><a href="#" class="text-white-50">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <h5 class="text-white mb-3">Newsletter</h5>
+                <div class="input-group">
+                    <input type="email" class="form-control" placeholder="Votre email">
+                    <button class="btn btn-outline-light" type="button">S'abonner</button>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4 bg-white">
+        <div class="text-center">
+            <p class="mb-0">&copy; 2024 CarShare. Tous droits réservés.</p>
+        </div>
     </div>
 </footer>
 
-{# Bootstrap JS CDN #}
+<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+<script>
+    // Form validation
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
 {% block javascripts %}{% endblock %}
 </body>
 </html>

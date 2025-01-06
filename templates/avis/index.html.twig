@@ -25,21 +25,78 @@
         }
         .navbar {
             background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            padding: 1rem 0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
+
         .navbar-brand {
             font-size: 1.5rem;
             font-weight: 600;
             color: white !important;
         }
+
         .navbar-nav .nav-link {
-            color: rgba(255, 255, 255, 0.8) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
             font-weight: 500;
+            padding: 0.5rem 1rem;
+            margin: 0 0.2rem;
+            border-radius: 8px;
             transition: all 0.3s ease;
         }
+
         .navbar-nav .nav-link:hover {
             color: white !important;
+            background: rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
+        }
+
+        .navbar .dropdown-menu {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem;
+        }
+
+        .navbar .dropdown-item {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar .dropdown-item:hover {
+            background-color: rgba(78, 84, 200, 0.1);
+            transform: translateX(5px);
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        @media (max-width: 991.98px) {
+            .navbar-nav .nav-link {
+                padding: 0.5rem 1rem;
+                margin: 0.2rem 0;
+            }
+
+            .navbar .dropdown-menu {
+                border-radius: 0;
+                box-shadow: none;
+                background: transparent;
+            }
+
+            .navbar .dropdown-item {
+                color: rgba(255, 255, 255, 0.9) !important;
+            }
+
+            .navbar .dropdown-item:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: white !important;
+            }
         }
         .gradient-primary {
             background: linear-gradient(45deg, #4e54c8, #8f94fb);
@@ -113,44 +170,83 @@
 </head>
 <body>
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
-        <a class="navbar-brand" href="{{ path('app_home') }}">CarShare</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
+            <i class="fas fa-car-side me-2"></i>
+            CarShare
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                    <a class="nav-link" href="{{ path('app_home') }}">
+                        <i class="fas fa-home me-1"></i>
+                        Accueil
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_trajet_index') }}">Trips</a>
+                    <a class="nav-link" href="{{ path('app_trajet_index') }}">
+                        <i class="fas fa-route me-1"></i>
+                        Trajets
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_vehicule_index') }}">Véhicules</a>
+                    <a class="nav-link" href="{{ path('app_vehicule_index') }}">
+                        <i class="fas fa-car me-1"></i>
+                        Véhicules
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_reservation_index') }}">Réservation</a>
+                    <a class="nav-link" href="{{ path('app_reservation_index') }}">
+                        <i class="fas fa-bookmark me-1"></i>
+                        Réservations
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_avis_index') }}">Avis</a>
+                    <a class="nav-link" href="{{ path('app_avis_index') }}">
+                        <i class="fas fa-star me-1"></i>
+                        Avis
+                    </a>
                 </li>
             </ul>
             <ul class="navbar-nav">
                 {% if app.user %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_profile') }}">Mon Profil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i>
+                            {{ app.user.email }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_profile') }}">
+                                    <i class="fas fa-user me-2"></i>Mon Profil
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                        <a class="nav-link" href="{{ path('app_login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i>
+                            Connexion
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                        <a class="nav-link" href="{{ path('app_register') }}">
+                            <i class="fas fa-user-plus me-1"></i>
+                            Inscription
+                        </a>
                     </li>
                 {% endif %}
             </ul>

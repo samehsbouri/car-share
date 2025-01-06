@@ -238,34 +238,36 @@ class AdminController extends AbstractController
         $form = $this->createForm(VehiculeType::class, $vehicule);
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gestion de l'upload de l'image
-            $imageFile = $form->get('imageFile')->getData(); // Changé de 'photo' à 'imageFile'
-            if ($imageFile) {
-                // Générer un nom unique pour le fichier
-                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+            try {
+                // Gestion de l'upload de l'image
+                $imageFile = $form->get('imageFile')->getData();
 
-                // Obtenir le chemin du répertoire où les images seront stockées
-                $uploadsDirectory = $this->getParameter('vehicules_directory'); // Changé pour utiliser le bon paramètre
+                if ($imageFile) {
+                    // Générer un nom unique pour le fichier
+                    $newFilename = uniqid().'.'.$imageFile->guessExtension();
 
-                // Vérifier si le répertoire existe
-                if (!file_exists($uploadsDirectory)) {
-                    mkdir($uploadsDirectory, 0777, true);
+                    // Déplacer le fichier dans le répertoire
+                    $imageFile->move(
+                        $this->getParameter('vehicules_directory'),
+                        $newFilename
+                    );
+
+                    // Définir le nom de l'image dans l'entité
+                    $vehicule->setImage($newFilename);
                 }
 
-                // Déplacer le fichier dans le répertoire
-                $imageFile->move($uploadsDirectory, $newFilename);
+                // Persister et enregistrer le véhicule
+                $this->entityManager->persist($vehicule);
+                $this->entityManager->flush();
 
-                // Mettre à jour le nom de l'image dans l'entité
-                $vehicule->setImage($newFilename); // Changé de setPhoto à setImage
+                $this->addFlash('success', 'Véhicule créé avec succès');
+                return $this->redirectToRoute('app_admin_vehicules');
+
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue : '.$e->getMessage());
             }
-
-            // Persister l'entité
-            $this->entityManager->persist($vehicule);
-            $this->entityManager->flush();
-
-            $this->addFlash('success', 'Véhicule créé avec succès');
-            return $this->redirectToRoute('app_admin_vehicules');
         }
 
         return $this->render('admin/vehicule/new.html.twig', [
