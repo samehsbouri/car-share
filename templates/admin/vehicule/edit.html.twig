@@ -359,98 +359,66 @@
             <h5 class="mb-0">Informations du véhicule</h5>
         </div>
 
-        <form class="needs-validation" novalidate>
-            <div class="form-section">
-                <div class="row">
-                    <!-- Image Upload Section -->
-                    <div class="col-12 mb-4">
-                        <div class="vehicle-image-container">
-                            <div class="vehicle-image-preview">
-                                {% if vehicule.image %}
-                                    <img src="/uploads/vehicules/{{ vehicule.image }}"
-                                         alt="{{ vehicule.marque }} {{ vehicule.modele }}"
-                                         id="preview-image">
-                                    <div class="vehicle-image-overlay">
-                                        {{ vehicule.marque }} {{ vehicule.modele }}
-                                    </div>
-                                {% else %}
-                                    <div class="upload-placeholder" id="upload-placeholder">
-                                        <i class="fas fa-camera"></i>
-                                        <p class="mb-0">Aucune image disponible</p>
-                                        <small>Cliquez pour ajouter une image</small>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <input type="file" class="form-control" accept="image/*">
-                            <small class="form-text text-muted">
-                                Format accepté : JPG, PNG. Taille maximale : 2Mo
-                            </small>
+        {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+        <div class="form-section">
+            <div class="row">
+                <!-- Image Upload Section -->
+                <div class="col-12 mb-4">
+                    <div class="vehicle-image-container">
+                        <div class="vehicle-image-preview">
+                            {% if vehicule.image %}
+                                <img src="{{ asset('uploads/vehicules/' ~ vehicule.image) }}"
+                                     alt="{{ vehicule.marque }} {{ vehicule.modele }}"
+                                     id="preview-image">
+                                <div class="vehicle-image-overlay">
+                                    {{ vehicule.marque }} {{ vehicule.modele }}
+                                </div>
+                            {% else %}
+                                <div class="upload-placeholder" id="upload-placeholder">
+                                    <i class="fas fa-camera"></i>
+                                    <p class="mb-0">Aucune image disponible</p>
+                                    <small>Cliquez pour ajouter une image</small>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
+                    {{ form_row(form.imageFile) }}
+                </div>
 
-                    <!-- Vehicle Details -->
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="marque" class="form-label">Marque *</label>
-                            <input type="text" id="marque" class="form-control" value="{{ vehicule.marque }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="annee" class="form-label">Année *</label>
-                            <input type="number" id="annee" class="form-control" value="{{ vehicule.annee }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="immatriculation" class="form-label">Immatriculation *</label>
-                            <input type="text" id="immatriculation" class="form-control" value="{{ vehicule.immatriculation }}" required>
-                        </div>
-                    </div>
+                <!-- Vehicle Details -->
+                <div class="col-md-6">
+                    {{ form_row(form.marque) }}
+                    {{ form_row(form.annee) }}
+                    {{ form_row(form.immatriculation) }}
+                </div>
 
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="modele" class="form-label">Modèle *</label>
-                            <input type="text" id="modele" class="form-control" value="{{ vehicule.modele }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="couleur" class="form-label">Couleur *</label>
-                            <input type="text" id="couleur" class="form-control" value="{{ vehicule.couleur }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="nombrePlaces" class="form-label">Nombre de places *</label>
-                            <input type="number" id="nombrePlaces" class="form-control" value="{{ vehicule.nombrePlaces }}" required>
-                        </div>
-                    </div>
+                <div class="col-md-6">
+                    {{ form_row(form.modele) }}
+                    {{ form_row(form.couleur) }}
+                    {{ form_row(form.nombrePlaces) }}
+                </div>
 
-                    <!-- Owner Section -->
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label for="proprietaire" class="form-label">Propriétaire *</label>
-                            <select id="proprietaire" class="form-control" required>
-                                <option value="{{ vehicule.proprietaire.id }}" selected>
-                                    {{ vehicule.proprietaire.prenom }} {{ vehicule.proprietaire.nom }}
-                                </option>
-                                <!-- Ajoutez d'autres options si nécessaire -->
-                            </select>
-                        </div>
-                    </div>
+                <!-- Owner Section -->
+                <div class="col-12">
+                    {{ form_row(form.proprietaire) }}
                 </div>
             </div>
+        </div>
 
-            <div class="form-footer">
-                <div class="d-flex justify-content-between align-items-center">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>
-                        Enregistrer les modifications
-                    </button>
-                    <a href="{{ path('app_admin_vehicules') }}" class="btn btn-secondary">
-                        <i class="fas fa-times me-2"></i>
-                        Annuler
-                    </a>
-                </div>
+        <div class="form-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>
+                    Enregistrer les modifications
+                </button>
+                <a href="{{ path('app_admin_vehicules') }}" class="btn btn-secondary">
+                    <i class="fas fa-times me-2"></i>
+                    Annuler
+                </a>
             </div>
-        </form>
+        </div>
+        {{ form_end(form) }}
     </div>
-</div>
 
 <!-- Footer -->
 <footer class="footer">
